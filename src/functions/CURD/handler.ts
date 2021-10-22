@@ -1,8 +1,10 @@
-import type { ValidatedEventAPIGatewayProxyEvent } from "@libs/apiGateway";
-import { formatJSONResponse } from "@libs/apiGateway";
-import { middyfy } from "@libs/lambda";
+import type { ValidatedEventAPIGatewayProxyEvent } from "../../libs/apiGateway";
+import { formatJSONResponse } from "../../libs/apiGateway";
+import { middyfy } from "../../libs/lambda";
 import Dynamo from "../../libs/dynamo";
-import { update, save, delete1, allval } from "./schema";
+import { update } from "./schema";
+// import { update, save, delete1, allval } from "./schema";1
+import { Handler } from "aws-lambda";
 
 // *********************** UPDATE VALUE ********************************** //
 
@@ -27,12 +29,9 @@ export const UpdateVal = middyfy(updateVal);
 
 // *********************** SAVE VALUE ********************************** //
 
-const savedata: ValidatedEventAPIGatewayProxyEvent<typeof save> = async (
-  event
-) => {
-  let ID = event.body;
-  console.log(ID, "eee");
-  const newUser = await Dynamo.write(ID, "WahabTable").catch((err) => {
+export const savedata: Handler = async (event) => {
+  console.log(event.body, "eee");
+  const newUser = await Dynamo.write(event.body, "WahabTable").catch((err) => {
     console.log("error in dynamo write", err);
     return null;
   });
@@ -48,9 +47,7 @@ export const SaveDate = middyfy(savedata);
 
 // *********************** DELETE VALUE ********************************** //
 
-const deleteVal: ValidatedEventAPIGatewayProxyEvent<typeof delete1> = async (
-  event
-) => {
+export const deleteVal: Handler = async (event) => {
   let ID = event.body.ID;
   console.log(ID, "eee");
   const user = await Dynamo.delete(ID, "WahabTable").catch((err) => {
@@ -68,9 +65,7 @@ const deleteVal: ValidatedEventAPIGatewayProxyEvent<typeof delete1> = async (
 export const DeleteVal = middyfy(deleteVal);
 
 // *********************** GEt All VAlue VALUE ********************************** //
-const allval1: ValidatedEventAPIGatewayProxyEvent<typeof allval> = async (
-  event
-) => {
+export const getalldata: Handler = async () => {
   // let ID = event.body.ID;
   // console.log(ID, "eee");
   const user = await Dynamo.getalldata("WahabTable").catch((err) => {
@@ -85,4 +80,4 @@ const allval1: ValidatedEventAPIGatewayProxyEvent<typeof allval> = async (
   return formatJSONResponse({ message: user });
 };
 
-export const getAllVal = middyfy(allval1);
+export const getAllVal = middyfy(getalldata);

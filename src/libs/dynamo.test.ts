@@ -1,32 +1,41 @@
-// const { Dynamo } = require("./dynamo");
-import Dynamo from "./dynamo";
+import { savedata, getalldata, deleteVal } from "../functions/CURD/handler";
 
-test("Dynamo is an object", () => {
-  expect(typeof Dynamo).toBe("object");
+let body = {
+  body: {
+    ID: "1234",
+    email: "adasda",
+  },
+};
+
+// test("Entered Correct Body. Event should return 200, with a body Object", async () => {
+//   const test = await savedata(body, null, null);
+//   expect(test.statusCode).toBe(200);
+// });
+
+describe("store data", () => {
+  it("Entered Correct Body. Event should return 200, with a body Object", async () => {
+    const test = await savedata(body, null, null);
+    expect(test.statusCode).toBe(200);
+  });
+  it("respone must contain email", async () => {
+    const test = await savedata(body, null, null);
+    expect(test).toContain({
+      body: {
+        message: {
+          ID: "1234",
+          email: "adasda",
+        },
+      },
+    });
+  });
 });
 
-test("dynamo has get and write", () => {
-  expect(typeof Dynamo.get).toBe("function");
-  expect(typeof Dynamo.write).toBe("function");
+test("Entered Correct Body. Event should return 200, with a body Object", async () => {
+  const test = await getalldata(body, null, null);
+  expect(test.statusCode).toBe(200);
 });
 
-const validTableName = "WahabTable";
-const data = { ID: "31042", score: 25, name: "Chris" };
-
-test("Dynamo write works", async () => {
-  try {
-    const res = await Dynamo.write(data, validTableName);
-    expect(res).toBe(data);
-  } catch (error) {
-    console.log("error in dynamo write test", error);
-  }
-});
-
-test("dynamo get works", async () => {
-  try {
-    const res = await Dynamo.get(data.ID, validTableName);
-    expect(res).toEqual(data);
-  } catch (error) {
-    console.log("error in dynamo get", error);
-  }
+test("Entered Correct Body. Event should return 200, with a body Object", async () => {
+  const test = await deleteVal(body, null, null);
+  expect(test.statusCode).toBe(200);
 });

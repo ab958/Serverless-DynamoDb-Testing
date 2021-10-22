@@ -1217,7 +1217,10 @@ __export(exports, {
   DeleteVal: () => DeleteVal,
   SaveDate: () => SaveDate,
   UpdateVal: () => UpdateVal,
-  getAllVal: () => getAllVal
+  deleteVal: () => deleteVal,
+  getAllVal: () => getAllVal,
+  getalldata: () => getalldata,
+  savedata: () => savedata
 });
 
 // src/libs/apiGateway.ts
@@ -1237,7 +1240,10 @@ var middyfy = (handler) => {
 
 // src/libs/dynamo.ts
 var AWS = require("aws-sdk");
-var documentClient = new AWS.DynamoDB.DocumentClient({});
+var documentClient = new AWS.DynamoDB.DocumentClient({
+  region: "localhost",
+  endpoint: "http://localhost:8000"
+});
 var Dynamo = {
   async get(ID, TableName) {
     console.log(ID, "wqe");
@@ -1314,9 +1320,8 @@ var updateVal = async (event) => {
 };
 var UpdateVal = middyfy(updateVal);
 var savedata = async (event) => {
-  let ID = event.body;
-  console.log(ID, "eee");
-  const newUser = await dynamo_default.write(ID, "WahabTable").catch((err) => {
+  console.log(event.body, "eee");
+  const newUser = await dynamo_default.write(event.body, "WahabTable").catch((err) => {
     console.log("error in dynamo write", err);
     return null;
   });
@@ -1339,7 +1344,7 @@ var deleteVal = async (event) => {
   return formatJSONResponse({ message: user });
 };
 var DeleteVal = middyfy(deleteVal);
-var allval1 = async (event) => {
+var getalldata = async () => {
   const user = await dynamo_default.getalldata("WahabTable").catch((err) => {
     console.log("error in Dynamo Get", err);
     return null;
@@ -1349,13 +1354,16 @@ var allval1 = async (event) => {
   }
   return formatJSONResponse({ message: user });
 };
-var getAllVal = middyfy(allval1);
+var getAllVal = middyfy(getalldata);
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   DeleteVal,
   SaveDate,
   UpdateVal,
-  getAllVal
+  deleteVal,
+  getAllVal,
+  getalldata,
+  savedata
 });
 /*!
  * content-type

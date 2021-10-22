@@ -1,4 +1,4 @@
-import { update, save, delete1, allval } from "./schema";
+import { update, save, delete1 } from "./schema";
 import { handlerPath } from "@libs/handlerResolver";
 
 export const updateVal = {
@@ -6,7 +6,7 @@ export const updateVal = {
   events: [
     {
       http: {
-        method: "post",
+        method: "put",
         path: "updateVal",
         request: {
           schema: {
@@ -59,11 +59,6 @@ export const allVal = {
       http: {
         method: "get",
         path: "getallval",
-        request: {
-          schema: {
-            "application/json": allval,
-          },
-        },
       },
     },
   ],

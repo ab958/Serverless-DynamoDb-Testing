@@ -26,6 +26,6 @@ export const delete1 = {
 export const allval = {
   type: "object",
   properties: {
-    ID: { type: "string" },
+    // ID: { type: "string" },
   },
 } as const;
